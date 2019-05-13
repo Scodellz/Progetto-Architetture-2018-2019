@@ -1,17 +1,16 @@
-riferito a masterVersion2 ABC
+
 
  Questa descrizione ad alto livello si focalizza nel presentare le strutture fondamentali utilizzate dal Cifratore.
  Il programma è stato sviluppato in modo da rispettare il principio di modulatirà.
- Perciò è stata favorita la riusabilità delle procedure data la
- generalità con cui sono state scritte per avere un codice più "facilmente" mantenibile,
- e grazie anche alla suddivisione delle funzionalità in tante piccole procedure.
+ Perciò è stata favorita la riusabilità delle procedure data la generalità con cui sono state scritte 
+ per avere un codice più "facilmente" mantenibile, grazie anche alla suddivisione delle funzionalità in tante piccole procedure.
 
 
   CIFRATORE:
-  bufferReader : .space[255]
-  bufferkey: .space[5]
-  messaggio.txt
+  bufferReader : .space[1500]
+  bufferkey :    .space[4]
   chiave.txt
+  messaggio.txt
   messaggioCifrato.txt
   messaggioDecifrato.txt
 
@@ -22,27 +21,26 @@ riferito a masterVersion2 ABC
   decifratura(bufferReader bufferkey):
   print(bufferReader messaggioDecifrato.txt)
 
-Il Cifratore avrà inizialmente il compito di leggere i file di testo (contenenti il messaggio da cifrare e la chiave di cifratura) 
-e di caricarli negli appositi buffer, nella seconda fase utilizzerà l'algoritmo D per invertire la chiave di cifratura corrente 
-e caricarla nel medesimo buffer dedicato alla chiave.
-A quel punto leggerà il file da decifrare e lo caricherà in bufferReader, per poi chiamare la procedura di decifratura.
-
-Alla fine di ogni fase il Cifratore ha il compito di scrivere nei file di uscita dedicati, chiamando le procedure apposite
+ Il Cifratore avrà inizialmente il compito di inizializzare la tabella dei salti dedicata agli Algoritmi di Cifratura, successivamente dovrà 
+ leggere i file di testo (contenenti la chiave di cifratura e messaggio da cifrare)e di caricarli negli appositi buffer.
+ Nella fase di Decifratura leggerà il file da decifrare e lo caricherà in bufferReader, si utilizzerà un flag per leggere la chiave di cifratura    in     senso inverso.
+ Alla fine di ogni fase il Cifratore ha il compito di scrivere nei file di uscita, chiamando le procedure apposite.
 
 CIFRATURA E DECIFRATURA:
 
-CIFRATURA    DECIFRATURA
+  CIFRATURA      		DECIFRATURA
 
-algAstatus() algAstatus()
-algBstatus() algBstatus()
-algCstatus() algCstatus()
-algDstatus() algDstatus()
-algEstatus() algEstatus()
-CORE()       CORE()
+  setStatusABC()                setStatusABC()
+  core()                         core()
 
-Il loro compito è quello di chiamare opportune procedure che hanno il compito di impostare dei flag.
-Questi flag avranno effetto sul comportamento di Core,  la procedura che eseguirà l'effettiva operazione di
-cifratura o decifratura chiamando gli opportuni algoritmi a seconda della lettera trovata in bufferKey.
+Visto gli algoritmi ABC hanno degli stati a comune, il loro settaggio è stato racchiuso in una procedura che aggiornerà
+i registri interesati.
+La fase di cifratura ha la responsabilita di caricare l'indirizzo della chiave, essendo la prima fase in cui viene utilizzata.
+Questo riferimento sarà utilizzato da core per leggere la chiave in senso inverso durante la fase di decifratura.
+
+
+CORE
+
 
 L'array di riferimento per entrambe le operazioni è sempre bufferReader. All'inizio del programma contiene il messaggio originario,
 mentre durante lo svolgimento dei vari algoritmi di cifratura conterrà le cifrature parziali ottenute dalle chiamate dei vari 
@@ -50,17 +48,7 @@ algoritmi e alla fine conterrà il messaggio finale da scrivere nel file di outpu
 
 **Aumentare piu descrizione se necessario **
 
-CORE
-VAR1:
-VAR2:
-CALL-A()
-CALL-B()
-CALL-C()
-CALL-D()
-CALL-E()
 
-Core è la procedura generica alla base del funzionamento dell'intero Cifratore,
-viene infatti utilizzata sia in fase di cifratura che in fase di decifratura.
-
-Core riceve bufferkey e chiama su bufferReader un algoritmo di cifratura per ogni simbolo trovato all'interno di bufferkey.
+Core è la procedura generica alla base del funzionamento dell'intero Cifratore, viene infatti utilizzata sia in fase di cifratura che in fase di decifratura. 
+Core carica gli indirizzi di bufferReader e statusABC al suo interno un algoritmo di cifratura per ogni simbolo trovato all'interno di bufferkey.
 La procedura di cifratura o decifratura finisce solo quando è stato letto ogni singolo carattere della chiave di cifratura.
