@@ -8,27 +8,28 @@
 .data 
 
 # STRINGHE DEDICATE PER LA VISUALIZZAZIONE DELLA OPERAZIONE IN CORSO:
-		opCifra:		.asciiz		"Cifratura in corso...\n"
-		opDecif:		.asciiz		" \nDecifratura in corso...\n"
-		done:		.asciiz	 	"\nOperazione Terminata." 
+		opCifra:		.asciiz		"Cifratura in corso..."
+		opDecif:		.asciiz		"\nDecifratura in corso..."
+		done:			.asciiz	 	"\nOperazione Terminata." 
 # DESCRITTORI DEI FILE IN INGRESSO: 
-		messaggio:	.asciiz		"C:/Users/duxom/Desktop/Mars/messaggio.txt"
-		chiave:		.asciiz	 	"C:/Users/duxom/Desktop/Mars/chiave.txt"
+		messaggio:		.asciiz		".marSETUP/messaggio.txt"
+		chiave:			.asciiz	 	".marSETUP/chiave.txt"
 # DESCRITTORI DEI FILE IN USCITA: 
-	 	msgCifrato:	.asciiz		"C:/Users/duxom/Desktop/Mars/messaggioCifrato.txt"	
-	 	msgDecifrato:	.asciiz		"C:/Users/duxom/Desktop/Mars/messaggioDecifrato.txt"
+	 	msgCifrato:		.asciiz		".marSETUP/messaggioCifrato.txt"	
+	 	msgDecifrato:		.asciiz		".marSETUP/messaggioDecifrato.txt"
+	 	
 .align 2
 		
 # BUFFER DECICATI AL SUPPORTO DELLE PROCEDURE:
-		algorithmJAT:	.space		20
-		statusABC:	.space		36
-		supportInvert: 	.space		4	
-		occurrenceBuffer:.space		260
-		supportBuffer: 	.space		30000
+		algorithmJAT:		.space		20
+		statusABC:		.space		36
+		supportInvert: 		.space		4	
+		occurrenceBuffer:	.space		260
+		supportBuffer: 		.space		30000
 					
 # BUFFER DEDICATI ALLA LETTURA DEI DATI DEI FILE IN INPUT:
-		bufferReader:	.space	    	30000
-		bufferKey:	.space	   	4	
+		bufferReader:		.space	    	30000
+		bufferKey:		.space	   	4	
 .align 2
 
 .text
@@ -48,7 +49,7 @@ main:		addi	$sp, $sp, -16
 		
 		la	$a0, messaggio		# Carico l'indirizzo del file che contiene il messaggio
 		jal	readMessage		# Vado alla procedura che lo legge
-		
+			
 		li	$s7, 0			# Variabile di stato : settata per la CIFRATURA 
 									
 		jal	cifratura		# Fase di CIFRATURA
@@ -59,7 +60,7 @@ main:		addi	$sp, $sp, -16
 		li	$v0, 16
 		la	$a0, msgCifrato		# Chiusura del file del messaggio cifrato
 		syscall
-		
+				
 ################ AVVIO FASE DECIFRATURA ################
 		
 		li	$s7, 1			# VARIABILE DI STATO : settata per la DECIFRATURA
@@ -75,7 +76,7 @@ main:		addi	$sp, $sp, -16
 		li	$v0, 16			
 		la	$a0, msgDecifrato	# Chiusura del file contenente il messaggio decifrato
 		syscall
-		
+				
 		j	exit  			# Vado alla fine del programma
 		
 #-----------------------------------------------------------------------------------------------------------------------#
@@ -232,7 +233,7 @@ algD:		add	$sp, $sp, -4		# Alloco spazio nello stack per una parola
 		move 	$s0, $v1			# Recupero il valore di ritorno : lunghezza del buffer corrente
 		move	$t0, $zero		# Riinizializzo $t0 per contare gli elementi inseriti
 						# Ciclo di inversione:
-reversal:	beq	$t0, $s0, swapVet	# Se il numero dei caratteri inseriti è pari alla lunghezza del buffer
+reversal:	beq	$t0, $s0, swapVet	# Se il numero dei caratteri inseriti ï¿½ pari alla lunghezza del buffer
 						# allora posso uscire dalla procedura	
 		lbu	$t1, ($a2)		# Carico l'elemento puntato del buffer
 		sb	$t1, ($a3)		# E lo salvo nel buffer di uscita
@@ -490,7 +491,7 @@ algorithmTable: la 	$t7, algorithmJAT	# Salvo l'indirizzo della JAT in $t7
 
 
 # setStatusABC: Imposta l'array degli stati dedicati alle procedure A, B e C
-# Offset per lettura dello stato : 0 è A , 12 è B, 24 è C
+# Offset per lettura dello stato : 0 ï¿½ A , 12 ï¿½ B, 24 ï¿½ C
 # 
 setStatusABC:	addi 	$sp, $sp, -4		# Faccio spazio nello stack per una parola
 		sw 	$ra, 0($sp)		# Salvo l'indirizzo di ritorno del chiamante
@@ -612,7 +613,7 @@ salta_decifra:	j	ritorno_scelta		# Torno indietro
 # parametri : 	$a0 <-- descritttore del file da leggere 
 #
 # valore di ritorno: 	void 
-# il suo effetto è quello di riempire il file da trattare 	
+# il suo effetto ï¿½ quello di riempire il file da trattare 	
 readMessage:	addi 	$sp, $sp, -4		# Apro spazio nello stack per una parola
 		sw	$ra, 0($sp)		# Salvo l'indirizzo di ritorno del chiamante
 		
@@ -631,7 +632,7 @@ readMessage:	addi 	$sp, $sp, -4		# Apro spazio nello stack per una parola
 # PARAMETRI : 		$a0 <-- DESCRITTORE DEL FILE 
 #
 # Valore di ritorno: 	void 
-# Il suo effetto è quello di riempire il buffer con la chiave
+# Il suo effetto ï¿½ quello di riempire il buffer con la chiave
 readKey:		addi 	$sp, $sp, -4		# Alloco spazio nel buffer per una parola
 		sw   	$ra, 0($sp)		# Salvo il rigistro di ritorno del chiamante
 		
@@ -723,6 +724,6 @@ exit:		lw 	$ra, 0($sp)
 		la	$a0, done		# "Operazione Terminata."						
 		syscall				
 	
-			
-		li $v0,10			# Chiusura del programma
-		syscall
+		li	$v0,10
+		syscall				# terminazione del programma
+
