@@ -1,4 +1,4 @@
-﻿# GRUPPO DI LAVORO :
+# GRUPPO DI LAVORO :
 # DUCCIO SERAFINI			E-MAIL: duccio.serafini@stud.unifi.it
 # ANDRE CRISTHIAN BARRETO DONAYRE	E-MAIL: andre.barreto@stud.unifi.it
 # 
