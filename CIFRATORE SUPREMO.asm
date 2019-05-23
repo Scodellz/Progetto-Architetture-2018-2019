@@ -1,4 +1,4 @@
-# GRUPPO DI LAVORO :
+﻿# GRUPPO DI LAVORO :
 # DUCCIO SERAFINI			E-MAIL: duccio.serafini@stud.unifi.it
 # ANDRE CRISTHIAN BARRETO DONAYRE	E-MAIL: andre.barreto@stud.unifi.it
 # 
@@ -12,19 +12,11 @@
 		opDecif:		.asciiz		"\nDecifratura in corso..."
 		done:			.asciiz	 	"\nOperazione Terminata." 
 # DESCRITTORI DEI FILE IN INGRESSO: 
-<<<<<<< HEAD
 		messaggio:		.asciiz		"messaggio.txt"
 		chiave:			.asciiz	 	"chiave.txt"
 # DESCRITTORI DEI FILE IN USCITA: 
 	 	msgCifrato:		.asciiz		"messaggioCifrato.txt"	
 	 	msgDecifrato:		.asciiz		"messaggioDecifrato.txt"
-=======
-		messaggio:		.asciiz		".marSETUP/messaggio.txt"
-		chiave:			.asciiz	 	".marSETUP/chiave.txt"
-# DESCRITTORI DEI FILE IN USCITA: 
-	 	msgCifrato:		.asciiz		".marSETUP/messaggioCifrato.txt"	
-	 	msgDecifrato:		.asciiz		".marSETUP/messaggioDecifrato.txt"
->>>>>>> db1098184840951eb5a4e60b3dcb48ef3e9f734c
 	 	
 .align 2
 		
@@ -241,11 +233,7 @@ algD:		add	$sp, $sp, -4		# Alloco spazio nello stack per una parola
 		move 	$s0, $v1			# Recupero il valore di ritorno : lunghezza del buffer corrente
 		move	$t0, $zero		# Riinizializzo $t0 per contare gli elementi inseriti
 						# Ciclo di inversione:
-<<<<<<< HEAD
 reversal:	beq	$t0, $s0, swapVet	# Se il numero dei caratteri inseriti e' pari alla lunghezza del buffer
-=======
-reversal:	beq	$t0, $s0, swapVet	# Se il numero dei caratteri inseriti � pari alla lunghezza del buffer
->>>>>>> db1098184840951eb5a4e60b3dcb48ef3e9f734c
 						# allora posso uscire dalla procedura	
 		lbu	$t1, ($a2)		# Carico l'elemento puntato del buffer
 		sb	$t1, ($a3)		# E lo salvo nel buffer di uscita
@@ -503,11 +491,7 @@ algorithmTable: la 	$t7, algorithmJAT	# Salvo l'indirizzo della JAT in $t7
 
 
 # setStatusABC: Imposta l'array degli stati dedicati alle procedure A, B e C
-<<<<<<< HEAD
 # Offset per lettura dello stato : 0 e' A , 12 e' B, 24 e' C
-=======
-# Offset per lettura dello stato : 0 � A , 12 � B, 24 � C
->>>>>>> db1098184840951eb5a4e60b3dcb48ef3e9f734c
 # 
 setStatusABC:	addi 	$sp, $sp, -4		# Faccio spazio nello stack per una parola
 		sw 	$ra, 0($sp)		# Salvo l'indirizzo di ritorno del chiamante
@@ -629,11 +613,7 @@ salta_decifra:	j	ritorno_scelta		# Torno indietro
 # parametri : 	$a0 <-- descritttore del file da leggere 
 #
 # valore di ritorno: 	void 
-<<<<<<< HEAD
 # il suo effetto e' quello di riempire il file da trattare 	
-=======
-# il suo effetto � quello di riempire il file da trattare 	
->>>>>>> db1098184840951eb5a4e60b3dcb48ef3e9f734c
 readMessage:	addi 	$sp, $sp, -4		# Apro spazio nello stack per una parola
 		sw	$ra, 0($sp)		# Salvo l'indirizzo di ritorno del chiamante
 		
@@ -652,11 +632,7 @@ readMessage:	addi 	$sp, $sp, -4		# Apro spazio nello stack per una parola
 # PARAMETRI : 		$a0 <-- DESCRITTORE DEL FILE 
 #
 # Valore di ritorno: 	void 
-<<<<<<< HEAD
 # Il suo effetto e' quello di riempire il buffer con la chiave
-=======
-# Il suo effetto � quello di riempire il buffer con la chiave
->>>>>>> db1098184840951eb5a4e60b3dcb48ef3e9f734c
 readKey:		addi 	$sp, $sp, -4		# Alloco spazio nel buffer per una parola
 		sw   	$ra, 0($sp)		# Salvo il rigistro di ritorno del chiamante
 		
