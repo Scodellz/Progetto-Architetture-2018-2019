@@ -24,11 +24,11 @@
 		algorithmJAT:		.space		20
 		statusABC:		.space		36
 		supportInvert: 		.space		4	
-		occurrenceBuffer:	.space		260
-		supportBuffer: 		.space		50000
+		occurrenceBuffer:	.space		256
+		supportBuffer: 		.space		100000
 					
 # BUFFER DEDICATI ALLA LETTURA DEI DATI DEI FILE IN INPUT:
-		bufferReader:		.space	    	50000
+		bufferReader:		.space	    	100000
 		bufferKey:		.space	   	4	
 .align 2
 
