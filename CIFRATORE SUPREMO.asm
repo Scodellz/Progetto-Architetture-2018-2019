@@ -610,10 +610,10 @@ salta_decifra:	j	ritorno_scelta		# Torno indietro
 			
 #-----------------------------------------------------------------------------------------------------------------------#
 # readMessage : Procedura dedicata alla lettura del file che deve essere CIFRATO o DECIFRATO
-# parametri : 	$a0 <-- descritttore del file da leggere 
+# parametri : 	$a0 <-- descrittore del file da leggere 
 #
 # valore di ritorno: 	void 
-# il suo effetto e' quello di riempire il file da trattare 	
+# il suo effetto e' quello di riempire il buffer da trattare 	
 readMessage:	addi 	$sp, $sp, -4		# Apro spazio nello stack per una parola
 		sw	$ra, 0($sp)		# Salvo l'indirizzo di ritorno del chiamante
 		
@@ -648,7 +648,7 @@ readKey:		addi 	$sp, $sp, -4		# Alloco spazio nel buffer per una parola
 		jr $ra				# Torno al precedente Jal
 						
 # writeMessage : Procedura dedicata alla scrittura del file CIFRATO o DECIFRATO
-# Parametri : 	$a0 <-- descritttore del file da leggere (l'etticheta che conitiene il percorso)
+# Parametri : 	$a0 <-- descrittore del file da scrivere (l'etticheta che conitiene il percorso)
 #
 # Valore di ritorno: 	void 
 writeMessage:	addi 	$sp, $sp, -4		# Alloco spazio nello stack per una parola
