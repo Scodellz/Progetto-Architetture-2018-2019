@@ -22,9 +22,8 @@
 		
 # BUFFER DECICATI AL SUPPORTO DELLE PROCEDURE:
 		algorithmJAT:		.space		20
-		statusABC:		.space		36
-		supportInvert: 		.space		4	
-		occurrenceBuffer:	.space		256
+		statusABC:		.space		24	
+		occurrenceBuffer:	.space		260
 		supportBuffer: 		.space		100000
 					
 # BUFFER DEDICATI ALLA LETTURA DEI DATI DEI FILE IN INPUT:
@@ -37,10 +36,6 @@
 	
 main:		addi	$sp, $sp, -16
 		jal	algorithmTable		# Creo una JAT table per chiamare gli algoritmi
-		sw	$ra, 0($sp)		# Salvo nello stack l'indirizzo di ritorno del chiamante
-		sw 	$s0, 4($sp)
-		sw 	$s1, 8($sp)
-		sw 	$s2, 12($sp) 
 		
 ################ AVVIO FASE CIFRATURA ################
 		
@@ -193,7 +188,7 @@ shifter:		addi	$sp, $sp, -4		# Salvo il registro $ra corrente per potere tornare
 		sw	$ra, 0($sp)		# al main a fine alla fine della procedura
 
 		la	$a3, bufferReader	# Carico l'indirizzo del buffer che contiene il messaggio
-		lb	$s2, 8($a0)		# $s2: passo per lo scorrimento all'elemento successivo
+		lb	$s2, 4($a0)		# $s2: passo per lo scorrimento all'elemento successivo
 		lb	$s0, 0($a0) 		# $s0: e' l'indice di partenza per la lettura
 		add	$a3, $a3, $s0		# Vado all' indice giusto
 								
@@ -498,11 +493,11 @@ setStatusABC:	addi 	$sp, $sp, -4		# Faccio spazio nello stack per una parola
 
 		jal	algAStatus		# Imposto gli stati per l'algoritmo A
 
-		addi	$a1, $a1, 12		# Vado avanti di 3 spazi
+		addi	$a1, $a1, 8		# Vado avanti di 2 spazi
 		jal 	algBStatus		# Imposto gli stati per l'algoritmo B
 	
-		addi 	$a1, $a1, 12		# Vado avanti di 3 spazi
-		jal 	algCStatus		# Imposto gli stati per l'algoritmo B
+		addi 	$a1, $a1, 8		# Vado avanti di 2 spazi
+		jal 	algCStatus		# Imposto gli stati per l'algoritmo C
 
 		lw	$ra, 0($sp)		# Carico l'indirizzo di ritorno del chiamante
 		addi	$sp, $sp, 4		# Dealloco spazio dello stack
@@ -515,17 +510,9 @@ algAStatus:	addi 	$sp, $sp, -4		# Faccio spazio nello stack per una parola
 		li	$t0, 0			# Carico l'offset di partenza
 		sb	$t0, 0($a1)		# E lo salvo nel buffer
 		li	$t2, 1			# Carico il passo di lettura
-		sb	$t2, 8($a1)		# E lo salvo nel buffer
+		sb	$t2, 4($a1)		# E lo salvo nel buffer
 
-		beqz 	$s7, stepA		# Se il flag e' 0 allora siamo in cifratura
-		li	$t1, 1			# Altrimenti siamo in decifratura e imposto il flag a 1
-		sb	$t1, 4($a1)		# E lo salvo nel buffer		
-		j	fineStatusA		# Vado alla fine del metodo
-
-stepA:		li	$t1, 0			# Essendo in cifratura imposto il flag a 0
-		sb	$t1, 4($a1)		# E lo salvo nel buffer
-
-fineStatusA:	lw	$ra, 0($sp)		# Carico indirizzo di ritorno del chiamante
+		lw	$ra, 0($sp)		# Carico indirizzo di ritorno del chiamante
 		addi	$sp, $sp, 4		# Dealloco spazio dello stack
 		jr $ra				# Torno a setStatusABC
 
@@ -536,17 +523,9 @@ algBStatus:	addi 	$sp, $sp, -4		# Faccio spazio nello stack per una parola
 		li	$t0, 0			# Carico l'offset di partenza
 		sb	$t0, 0($a1)		# E lo salvo nel buffer
 		li	$t2, 2			# Carico il passo di lettura
-		sb	$t2, 8($a1)		# E lo salvo nel buffer	
-			
-		beqz 	$s7, stepB		# Se il flag e' 0 allora siamo in cifratura
-		li	$t1, 1			# Altrimenti siamo in decifratura e imposto il flag a 1
-		sb	$t1, 4($a1)		# E lo salvo nel buffer			
-		j	fineStatusB		# Vado alla fine del metodo
-		
-stepB:		li	$t1, 0			# Essendo in cifratura imposto il flag a 0
-		sb	$t1, 4($a1)		# E lo salvo nel buffer
+		sb	$t2, 4($a1)		# E lo salvo nel buffer	
 
-fineStatusB:	lw	$ra, 0($sp)		# Carico indirizzo di ritorno del chiamante
+		lw	$ra, 0($sp)		# Carico indirizzo di ritorno del chiamante
 		addi	$sp, $sp, 4		# Dealloco spazio dello stack	
 		jr $ra				# Torno a setStatusABC
 
@@ -557,17 +536,9 @@ algCStatus:	addi 	$sp, $sp, -4		# Faccio spazio nello stack per una parola
 		li	$t0, 1			# Carico l'offset di partenza
 		sb	$t0, 0($a1)		# E lo salvo nel buffer
 		li	$t2, 2			# Carico il passo di lettura
-		sb	$t2, 8($a1)		# E lo salvo nel buffer
-			
-		beqz 	$s7, stepC		# Se il flag e' 0 allora siamo in cifratura
-		li	$t1, 1			# Altrimenti siamo in decifratura e imposto il flag a 1
-		sb	$t1, 4($a1)		# E lo salvo nel buffer				
-		j	fineStatusC		# Vado alla fine del metodo
+		sb	$t2, 4($a1)		# E lo salvo nel buffer
 		
-stepC:		li	$t1, 0			# Essendo in cifratura imposto il flag a 0
-		sb	$t1, 4($a1)		# E lo salvo nel buffer
-		
-fineStatusC:	lw	$ra, 0($sp)		# Carico indirizzo di ritorno del chiamante
+		lw	$ra, 0($sp)		# Carico indirizzo di ritorno del chiamante
 		addi	$sp, $sp, 4		# Dealloco spazio dello stack
 		jr $ra				# Torno a setStatusABC
 		
@@ -580,13 +551,13 @@ algoritmo_A:	la	$a0, statusABC 		# Carico l'indirizzo del buffer degli stati per
 		j	ritorno_scelta		# Torno indietro
 					
 algoritmo_B:	la	$a0, statusABC		# Carico l'indirizzo del buffer degli stati per A B o C
-		addi 	$a0, $a0, 12		# Avanzo di 12 posizioni nel buffer per trovare gli stati di B
+		addi 	$a0, $a0, 8		# Avanzo di 8 posizioni nel buffer per trovare gli stati di B
 		jal	shifter			# Chiamo shifter settato per l'algoritmo B
 
 		j	ritorno_scelta		# Torno indietro
 			
 algoritmo_C:	la	$a0, statusABC		# Carico l'indirizzo del buffer degli stati per A B o C
-		addi 	$a0, $a0, 24		# Avanzo di 24 posizioni nel buffer per trovare gli stati di C
+		addi 	$a0, $a0, 16		# Avanzo di 16 posizioni nel buffer per trovare gli stati di C
 		jal	shifter			# Chiamo shifter settao per l'algoritmo C
 
 		j	ritorno_scelta		# Torno indietro
@@ -610,10 +581,10 @@ salta_decifra:	j	ritorno_scelta		# Torno indietro
 			
 #-----------------------------------------------------------------------------------------------------------------------#
 # readMessage : Procedura dedicata alla lettura del file che deve essere CIFRATO o DECIFRATO
-# parametri : 	$a0 <-- descrittore del file da leggere 
+# parametri : 	$a0 <-- descritttore del file da leggere 
 #
 # valore di ritorno: 	void 
-# il suo effetto e' quello di riempire il buffer da trattare 	
+# il suo effetto e' quello di riempire il file da trattare 	
 readMessage:	addi 	$sp, $sp, -4		# Apro spazio nello stack per una parola
 		sw	$ra, 0($sp)		# Salvo l'indirizzo di ritorno del chiamante
 		
@@ -648,7 +619,7 @@ readKey:		addi 	$sp, $sp, -4		# Alloco spazio nel buffer per una parola
 		jr $ra				# Torno al precedente Jal
 						
 # writeMessage : Procedura dedicata alla scrittura del file CIFRATO o DECIFRATO
-# Parametri : 	$a0 <-- descrittore del file da scrivere (l'etticheta che conitiene il percorso)
+# Parametri : 	$a0 <-- descritttore del file da leggere (l'etticheta che conitiene il percorso)
 #
 # Valore di ritorno: 	void 
 writeMessage:	addi 	$sp, $sp, -4		# Alloco spazio nello stack per una parola
@@ -714,16 +685,11 @@ writeFile:   	li 	$v0, 15
     		
      		jr $ra 
 #-----------------------------------------------------------------------------------------------------------------------#
-exit:		lw 	$ra, 0($sp)
-		lw 	$s0, 4($sp)
-		lw 	$s1, 8($sp)
-		lw 	$s2, 12($sp)
-		addi 	$sp, $sp, 16		# Dealloco spazio dello stack per chiuderlo definitivamente
-	
+exit:		addi 	$sp, $sp, 16		# Dealloco spazio dello stack per chiuderlo definitivamente
+
 		li	$v0, 4			# Visualizza il messaggio di terminazione del programma	
 		la	$a0, done		# "Operazione Terminata."						
 		syscall				
 	
 		li	$v0,10
 		syscall				# terminazione del programma
-
